@@ -8,17 +8,8 @@ export class AppController {
 
   @Get()
   root() {
-    return this.appService.getItem();
-  }
-  /*root(): object {
     return {
-      status: 200,
-      message: 'seccessful Get Method'
+        Message: 'Hello Node Js Web api'
     }
-  }*/
-
-  @Post()
-  post(): void {
-   this.appService.createItem();
   }
 }
