@@ -7,18 +7,18 @@ export class AppController {
   constructor(private readonly appService: AppService) { }
 
   @Get()
-  root(): object {
+  root() {
+    return this.appService.getItem();
+  }
+  /*root(): object {
     return {
       status: 200,
       message: 'seccessful Get Method'
     }
-  }
+  }*/
 
   @Post()
-  post(): object {
-    return {
-      status: 200,
-      message: 'seccessful Post Method'
-    }
+  post(): void {
+   this.appService.createItem();
   }
 }
