@@ -6,7 +6,10 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  root(): string {
-    return this.appService.root();
+  root(): object {
+    return {
+      status: 200,
+      message: 'seccessful'
+    }
   }
 }
