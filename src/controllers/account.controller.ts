@@ -6,10 +6,10 @@ import { ValidationPipe } from 'pipes/validation.pipe';
 
 @Controller('api/account')
 export class AccountController {
-    constructor(private appService: AppService) { }
+    constructor(private service: AppService) { }
 
-    @Post('register')
+    @Post('register') // ลงทะเบียน
     register(@Body(new ValidationPipe()) body: RegisterModel) {
-            return body;
+          return this.service.onRegister(body);
     }
 }

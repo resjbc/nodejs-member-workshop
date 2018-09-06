@@ -1,34 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IMemberDocument } from 'interfaces/member.interface';
+import { IRegister, IAccount, RoleAccount } from 'interfaces/app.interface';
 
 @Injectable()
 export class AppService {
   constructor(
-    @InjectModel('Member') private memberTable: Model<any>
-  ) {
-    // console.log(catTable);
+    @InjectModel('Member') private MemberCollection: Model<IMemberDocument>
+  ) { }
+
+  //ลงทะเบียน
+  async onRegister(body: IRegister) {
+    delete body.cpassword;
+    const model: IAccount = body;
+    model.image = '';
+    model.position = '';
+    model.role = RoleAccount.Member;
+    return await this.MemberCollection.create(model);
   }
 
-  async getItem() {
-    return await this.memberTable.find();
-  }
-
-  createItem() {
-    const model = new this.memberTable({
-      firstname: 'firstname',
-      lastname: 'lastname',
-      email: 'email',
-      password: 'password',
-      id: 1,
-      position: 'position',
-      image: 'image',
-      role: 1,
-    });
-    model.save();
-  }
-
-  root(): string {
-    return 'Hello World! ';
-  }
 }
