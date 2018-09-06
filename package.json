@@ -23,6 +23,8 @@
     "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",
     "@nestjs/mongoose": "^5.2.1",
+    "class-transformer": "^0.1.9",
+    "class-validator": "^0.9.1",
     "mongoose": "^5.2.13",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.2",
