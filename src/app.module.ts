@@ -6,6 +6,7 @@ import { memberSchema } from 'schemas/member.schema';
 import { AccountController } from 'controllers/account.controller';
 import { DBAuthenService } from 'services/db_authen.service';
 import { accessTokenSchema } from 'schemas/access-token.schema';
+import { JwtAuthenService } from 'services/jwt-authen.service';
 
 
 @Module({
@@ -22,7 +23,8 @@ import { accessTokenSchema } from 'schemas/access-token.schema';
   ],
   providers: [
     AppService,
-    DBAuthenService
+    DBAuthenService,
+    JwtAuthenService
   ],
 })
 export class AppModule { }
