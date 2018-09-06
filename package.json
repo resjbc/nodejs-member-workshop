@@ -26,6 +26,7 @@
     "class-transformer": "^0.1.9",
     "class-validator": "^0.9.1",
     "mongoose": "^5.2.13",
+    "password-hash": "^1.2.2",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.2",
     "typescript": "^3.0.1"
@@ -36,6 +37,7 @@
     "@types/jest": "^23.3.1",
     "@types/mongoose": "^5.2.9",
     "@types/node": "^10.7.1",
+    "@types/password-hash": "^1.2.20",
     "@types/supertest": "^2.0.5",
     "jest": "^23.5.0",
     "nodemon": "^1.18.3",

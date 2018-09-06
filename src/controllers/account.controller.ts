@@ -10,6 +10,6 @@ export class AccountController {
 
     @Post('register') // ลงทะเบียน
     register(@Body(new ValidationPipe()) body: RegisterModel) {
-          return this.service.onRegister(body);
+        return this.service.onRegister(body);
     }
 }
