@@ -4,10 +4,12 @@ import { Model } from 'mongoose';
 import { IMemberDocument } from 'interfaces/member.interface';
 import { IRegister, IAccount, RoleAccount, ILogin } from 'interfaces/app.interface';
 import { generate, verify } from 'password-hash';
+import { DBAuthenService } from './db_authen.service';
 
 @Injectable()
 export class AppService {
   constructor(
+    private authenService: DBAuthenService,
     @InjectModel('Member') private MemberCollection: Model<IMemberDocument>
   ) { }
 
@@ -30,7 +32,7 @@ export class AppService {
     const member = await this.MemberCollection.findOne({email: body.email});
     if(!member) throw new BadRequestException('ไม่มีผู้ใช้งานนี้ในระบบ');
     if (verify(body.password,member.password)) {
-      return { accessToken: ''};
+      return { accessToken: await this.authenService.genereateAccessToken(member)};
     }
     throw new BadRequestException('อีเมล์หรือรหัสผ่านไม่ถูกต้อง');
   }

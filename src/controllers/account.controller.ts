@@ -3,11 +3,13 @@ import { AppService } from 'services/app.service';
 import { RegisterModel } from 'models/register.model';
 import { ValidationPipe } from 'pipes/validation.pipe';
 import { LoginModel } from 'models/login.model';
+import { DBAuthenService } from 'services/db_authen.service';
 
 
 @Controller('api/account')
 export class AccountController {
-    constructor(private service: AppService) { }
+    constructor(
+        private service: AppService) { }
 
     @Post('register') // ลงทะเบียน
     register(@Body(new ValidationPipe()) body: RegisterModel) {
