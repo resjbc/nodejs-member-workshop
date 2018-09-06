@@ -1,5 +1,6 @@
 import { IRegister } from "interfaces/app.interface";
 import { IsNotEmpty, IsEmail, Matches } from "class-validator";
+import { IsComparePassword } from "pipes/validation.pipe";
 
 export class RegisterModel implements IRegister {
 
@@ -16,7 +17,7 @@ export class RegisterModel implements IRegister {
     password: string;
 
     @IsNotEmpty()
-    @Matches(/^[A-z0-9]{6,15}$/)
+    @IsComparePassword('password')
     cpassword: string;
 
 

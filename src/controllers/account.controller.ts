@@ -10,9 +10,6 @@ export class AccountController {
 
     @Post('register')
     register(@Body(new ValidationPipe()) body: RegisterModel) {
-        if(body.password === body.cpassword)
-            return body
-        
-            throw new BadRequestException('รหัสผ่านกับยืนยันรหัสผ่านไม่ตรงกัน');
+            return body;
     }
 }

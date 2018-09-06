@@ -1,5 +1,5 @@
 import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { validate } from 'class-validator';
+import { validate, ValidationOptions, registerDecorator, ValidationArguments } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class ValidationPipe implements PipeTransform<any> {
         const errors = await validate(object);
         if (errors.length > 0) {
             const constraints = errors.map(m => m.constraints);
-            console.log(constraints);
+           // console.log(constraints);
             //throw new BadRequestException(errors)
             if (constraints.length > 0) {
                 const constraint = constraints[0];
@@ -32,3 +32,24 @@ export class ValidationPipe implements PipeTransform<any> {
         return !types.find((type) => metatype === type);
     }
 }
+
+export function IsComparePassword(property: string, validationOptions?: ValidationOptions) {
+    return function (object: Object, propertyName: string) {
+        if(validationOptions == undefined) {
+            validationOptions ={};
+            validationOptions.message = 'password and confirm password do not match.'
+        }
+         registerDecorator({
+             name: "IsComparePassword",
+             target: object.constructor,
+             propertyName: propertyName,
+             constraints: [property],
+             options: validationOptions,
+             validator: {
+                 validate(value: any, args: ValidationArguments) {
+                    return args.object[property] === value;
+                 }
+             }
+         });
+    };
+ }
