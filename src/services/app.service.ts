@@ -2,8 +2,8 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IMemberDocument } from 'interfaces/member.interface';
-import { IRegister, IAccount, RoleAccount } from 'interfaces/app.interface';
-import { generate } from 'password-hash';
+import { IRegister, IAccount, RoleAccount, ILogin } from 'interfaces/app.interface';
+import { generate, verify } from 'password-hash';
 
 @Injectable()
 export class AppService {
@@ -24,6 +24,15 @@ export class AppService {
     const modelItem =  await this.MemberCollection.create(model);
     modelItem.password = '';
     return modelItem;
+  }
+
+  async onLogin(body: ILogin) {
+    const member = await this.MemberCollection.findOne({email: body.email});
+    if(!member) throw new BadRequestException('ไม่มีผู้ใช้งานนี้ในระบบ');
+    if (verify(body.password,member.password)) {
+      return { accessToken: ''};
+    }
+    throw new BadRequestException('อีเมล์หรือรหัสผ่านไม่ถูกต้อง');
   }
 
 }
