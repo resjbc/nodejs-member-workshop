@@ -7,16 +7,24 @@ import { DBAuthenService } from 'services/db_authen.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { IMemberDocument } from 'interfaces/member.interface';
+import { ProfileModel } from 'models/profile.model';
 
 
 @Controller('api/member')
 //@UseGuards(AuthGuard('bearer'))
 @UseGuards(AuthGuard('jwt'))
 export class MemberController {
+
     @Get('data') // ลงทะเบียน
     getUserLogin(@Req() req:Request) {
        const userLogin: IMemberDocument =  req.user as any;
        userLogin.password = '';
        return userLogin;
     }
+
+    @Post('profile')
+    updateProfile(@Body(new ValidationPipe()) body: ProfileModel) {
+        return body;
+    }
+
 }
