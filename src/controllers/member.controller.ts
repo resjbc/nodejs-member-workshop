@@ -10,7 +10,8 @@ import { IMemberDocument } from 'interfaces/member.interface';
 
 
 @Controller('api/member')
-@UseGuards(AuthGuard('bearer'))
+//@UseGuards(AuthGuard('bearer'))
+@UseGuards(AuthGuard('jwt'))
 export class MemberController {
     @Get('data') // ลงทะเบียน
     getUserLogin(@Req() req:Request) {

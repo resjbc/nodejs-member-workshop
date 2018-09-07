@@ -10,7 +10,7 @@ import { JwtAuthenService } from './jwt-authen.service';
 @Injectable()
 export class AppService {
   constructor(
-    private authenService: DBAuthenService,
+    private authenService: JwtAuthenService,
     @InjectModel('Member') private MemberCollection: Model<IMemberDocument>
   ) { }
 
