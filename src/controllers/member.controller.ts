@@ -15,18 +15,19 @@ import { MemberService } from 'services/member.service';
 //@UseGuards(AuthGuard('bearer'))
 @UseGuards(AuthGuard('jwt'))
 export class MemberController {
-constructor(private service: MemberService) {}
+    constructor(private service: MemberService) { }
 
     @Get('data') // ลงทะเบียน
-    getUserLogin(@Req() req:Request) {
-       const userLogin: IMemberDocument =  req.user as any;
-       userLogin.password = '';
-       return userLogin;
+    getUserLogin(@Req() req: Request) {
+        const userLogin: IMemberDocument = req.user as any;
+        userLogin.image = userLogin.image ? 'http://localhost:3000' + userLogin.image : '';
+        userLogin.password = '';
+        return userLogin;
     }
 
     @Post('profile')
-    updateProfile(@Req() req:Request, @Body(new ValidationPipe()) body: ProfileModel) {
-        return this.service.onUpdateProfile(req.user.id, body);
+    updateProfile(@Req() req: Request, @Body(new ValidationPipe()) body: ProfileModel) {
+        return this.service.onUpdateProfile(req.user.id,req.user.image, body);
     }
 
 }
