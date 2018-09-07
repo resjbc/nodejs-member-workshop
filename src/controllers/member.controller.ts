@@ -8,12 +8,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { IMemberDocument } from 'interfaces/member.interface';
 import { ProfileModel } from 'models/profile.model';
+import { MemberService } from 'services/member.service';
 
 
 @Controller('api/member')
 //@UseGuards(AuthGuard('bearer'))
 @UseGuards(AuthGuard('jwt'))
 export class MemberController {
+constructor(private service: MemberService) {}
 
     @Get('data') // ลงทะเบียน
     getUserLogin(@Req() req:Request) {
@@ -23,8 +25,8 @@ export class MemberController {
     }
 
     @Post('profile')
-    updateProfile(@Body(new ValidationPipe()) body: ProfileModel) {
-        return body;
+    updateProfile(@Req() req:Request, @Body(new ValidationPipe()) body: ProfileModel) {
+        return this.service.onUpdateProfile(req.user.id, body);
     }
 
 }
