@@ -5,11 +5,16 @@ import { sign } from 'jsonwebtoken';
 
 @Injectable()
 export class JwtAuthenService implements IAuthen {
+    
 
     private secretKey: string = 'NodeJS Member Workshop';
 
     async genereateAccessToken(member: IMemberDocument) {
         const payload = { email: member.email };
         return sign(payload, this.secretKey, { expiresIn: 60 * 60 });
+    }
+
+    validateUser(accessToken: any): Promise<IMemberDocument> {
+        throw new Error("Method not implemented.");
     }
 }

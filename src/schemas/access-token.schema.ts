@@ -1,6 +1,9 @@
 import { Schema } from 'mongoose';
 export const accessTokenSchema = new Schema({
-    memberID: Schema.Types.ObjectId,
+    memberID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Member'
+    },
     accessToken: String,
     exprise: Date,
     created: {

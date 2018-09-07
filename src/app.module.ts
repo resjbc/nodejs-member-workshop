@@ -4,7 +4,7 @@ import { AppService } from 'services/app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { memberSchema } from 'schemas/member.schema';
 import { AccountController } from 'controllers/account.controller';
-import { DBAuthenService } from 'services/db_authen.service';
+import { DBAuthenService, DBAuthenStrategy } from 'services/db_authen.service';
 import { accessTokenSchema } from 'schemas/access-token.schema';
 import { JwtAuthenService } from 'services/jwt-authen.service';
 import { MemberController } from 'controllers/member.controller';
@@ -26,7 +26,8 @@ import { MemberController } from 'controllers/member.controller';
   providers: [
     AppService,
     DBAuthenService,
-    JwtAuthenService
+    JwtAuthenService,
+    DBAuthenStrategy
   ],
 })
 export class AppModule { }
