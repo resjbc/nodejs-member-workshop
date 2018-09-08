@@ -26,6 +26,24 @@ export class MemberService {
         //this.MemberCollection.create(members, ( err => console.log(err)))
     }
 
+    //สร้างข้อมูลสมาชิก
+    async createMemberItem(body: IAccount) {
+        const count = await this.MemberCollection.count({ email: body.email });
+
+        if (count > 0) throw new BadRequestException('มีอีเมล์นี้ในระบบแล้ว');
+
+        body.password = generate(body.password);
+        let image = body.image
+        body.image = '';
+        let memberCreated = await this.MemberCollection.create(body);
+        image = image ? this.convertUploadImage(memberCreated.id, image) : '';
+        memberCreated.image = image;
+        await this.MemberCollection.update({ _id: memberCreated.id }, memberCreated);
+        memberCreated.password = '';
+
+        return memberCreated;
+    }
+
     // แก้ไขข้อมูลโปรไฟล์
     async onUpdateProfile(memberID: any, memberImage: string, body: IProfile) {
 
@@ -52,7 +70,7 @@ export class MemberService {
     }
 
     //แปลงรูปภาพจาก Base64 เป็น ไฟล์
-    private convertUploadImage(memberID, image: string) {
+    private convertUploadImage(memberID: any, image: string) {
         try {
             //สร้างโฟลเดอร์ใหม่
             const uploadDir = BASE_DIR + '/uploads';
@@ -114,7 +132,7 @@ export class MemberService {
                         }
                     }, { image: false })*/
                     queryItemFunction = () => this.MemberCollection
-                        .find({} , {image: false})
+                        .find({}, { image: false })
                         .where('updated')
                         .gt(text['from'])
                         .lt(text['to'])
@@ -138,4 +156,6 @@ export class MemberService {
         const totalItems = await queryItemFunction().count({});
         return <IMember>{ items, totalItems };
     }
+
+
 }

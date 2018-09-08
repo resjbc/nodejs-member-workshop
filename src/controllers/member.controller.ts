@@ -11,6 +11,7 @@ import { ProfileModel } from 'models/profile.model';
 import { MemberService } from 'services/member.service';
 import { ChangePasswordModel } from 'models/change-password.model';
 import { SearchModel } from 'models/search.model';
+import { MemberModel } from 'models/member.model';
 
 
 @Controller('api/member')
@@ -42,6 +43,11 @@ export class MemberController {
         query.startPage = parseInt(query.startPage as any);
         query.limitPage = parseInt(query.limitPage as any);
         return this.service.getMemberItems(query);
+    }
+
+    @Post() //เพิ่มข้อมูลสมาชิก
+    createMember(@Req() req: Request, @Body(new ValidationPipe()) body: MemberModel) {
+      return this.service.createMemberItem(body);
     }
 
 
