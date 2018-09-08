@@ -9,6 +9,7 @@ import { Request } from 'express';
 import { IMemberDocument } from 'interfaces/member.interface';
 import { ProfileModel } from 'models/profile.model';
 import { MemberService } from 'services/member.service';
+import { ChangePasswordModel } from 'models/change-password.model';
 
 
 @Controller('api/member')
@@ -28,6 +29,11 @@ export class MemberController {
     @Post('profile')
     updateProfile(@Req() req: Request, @Body(new ValidationPipe()) body: ProfileModel) {
         return this.service.onUpdateProfile(req.user.id,req.user.image, body);
+    }
+
+    @Post('change-password')
+    changePassword(@Req() req: Request, @Body(new ValidationPipe()) body: ChangePasswordModel) {
+        return this.service.onChangePassword(req.user.id, body);
     }
 
 }

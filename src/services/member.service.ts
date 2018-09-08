@@ -1,10 +1,11 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
-import { IProfile, IAccount } from "interfaces/app.interface";
+import { IProfile, IAccount, IChangePassword } from "interfaces/app.interface";
 import { IMemberDocument } from "interfaces/member.interface";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { BASE_DIR } from "main";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { verify, generate } from "password-hash";
 
 @Injectable()
 export class MemberService {
@@ -13,6 +14,11 @@ export class MemberService {
     // แก้ไขข้อมูลโปรไฟล์
     async onUpdateProfile(memberID: any, memberImage: string, body: IProfile) {
 
+        //สำหรับถ้ารูปเป็น null
+        /*const member  = body;
+        if(!member.image) delete member.image;
+        else member.image = this.convertUploadImage(memberID,member.image); 
+        member['updated'] =  new Date();*/
 
         const updated = await this.MemberCollection.update({ _id: memberID }, <IAccount>{
             firstname: body.firstname,
@@ -54,5 +60,18 @@ export class MemberService {
             throw new BadRequestException(ex.message);
         }
 
+    }
+
+    //เปลี่ยนรหัสผ่าน
+    async onChangePassword(memberID: any, body: IChangePassword) {
+        const memberItem = await this.MemberCollection.findById(memberID);
+        if (!verify(body.old_pass, memberItem.password))
+            throw new BadRequestException('หรัสผ่านเดิมไม่ถูกต้อง');
+           const updated =  await this.MemberCollection.update({ _id: memberID }, <IAccount>{
+                password: generate(body.new_pass),
+                updated: new Date()
+            });
+
+        return updated;
     }
 }
