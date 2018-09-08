@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
-import { IProfile, IAccount, IChangePassword, IMember, RoleAccount } from "interfaces/app.interface";
+import { IProfile, IAccount, IChangePassword, IMember, RoleAccount, ISearch } from "interfaces/app.interface";
 import { IMemberDocument } from "interfaces/member.interface";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -23,8 +23,8 @@ export class MemberService {
                 });
             }*/
 
-           //this.MemberCollection.create(members, ( err => console.log(err)))
-     }
+        //this.MemberCollection.create(members, ( err => console.log(err)))
+    }
 
     // แก้ไขข้อมูลโปรไฟล์
     async onUpdateProfile(memberID: any, memberImage: string, body: IProfile) {
@@ -83,18 +83,25 @@ export class MemberService {
         const memberItem = await this.MemberCollection.findById(memberID);
         if (!verify(body.old_pass, memberItem.password))
             throw new BadRequestException('หรัสผ่านเดิมไม่ถูกต้อง');
-           const updated =  await this.MemberCollection.update({ _id: memberID }, <IAccount>{
-                password: generate(body.new_pass),
-                updated: new Date()
-            });
+        const updated = await this.MemberCollection.update({ _id: memberID }, <IAccount>{
+            password: generate(body.new_pass),
+            updated: new Date()
+        });
 
         return updated;
     }
 
     //แสดงข้อมูลสมาชิก
-    async getMemberItems() {
-        
-        const items =  await this.MemberCollection.find({}, { image: false});
+    async getMemberItems(searchOption: ISearch) {
+
+        //ค้นหาและแบ่งหน้า page
+        const items = await this.MemberCollection
+            .find({}, { image: false })
+            .sort({ updated: -1 })
+            .skip((searchOption.startPage - 1) * searchOption.limitPage)
+            .limit(searchOption.limitPage);
+
+        //หาผลรวมหน้า page ทั้งหมด
         const totalItems = await this.MemberCollection.count({});
         return <IMember>{
             items,

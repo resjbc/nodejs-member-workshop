@@ -1,4 +1,4 @@
-import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req } from '@nestjs/common';
+import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req, Query } from '@nestjs/common';
 import { AppService } from 'services/app.service';
 import { RegisterModel } from 'models/register.model';
 import { ValidationPipe } from 'pipes/validation.pipe';
@@ -10,6 +10,7 @@ import { IMemberDocument } from 'interfaces/member.interface';
 import { ProfileModel } from 'models/profile.model';
 import { MemberService } from 'services/member.service';
 import { ChangePasswordModel } from 'models/change-password.model';
+import { SearchModel } from 'models/search.model';
 
 
 @Controller('api/member')
@@ -37,8 +38,10 @@ export class MemberController {
     }
 
     @Get() //แสดงข้อมูลสมาชิก
-    showMember() {
-        return this.service.getMemberItems();
+    showMember(@Query(new ValidationPipe()) query:SearchModel) {
+        query.startPage = parseInt(query.startPage as any);
+        query.limitPage = parseInt(query.limitPage as any);
+        return this.service.getMemberItems(query);
     }
 
 
