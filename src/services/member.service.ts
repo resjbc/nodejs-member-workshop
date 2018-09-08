@@ -92,20 +92,50 @@ export class MemberService {
     }
 
     //แสดงข้อมูลสมาชิก
-    async getMemberItems(searchOption: ISearch) {
+    async getMemberItems(searchOption: ISearch): Promise<IMember> {
+
+        let queryItemFunction = () => this.MemberCollection.find({}, { image: false });
+
+        //ส่วนของการค้นหา
+        if (searchOption.searchText && searchOption.searchType) {
+            const text = searchOption.searchText;
+            const type = searchOption.searchType;
+            const conditions = {};
+            switch (type) {
+                case 'role':
+                    conditions[type] = text;
+                    queryItemFunction = () => this.MemberCollection.find(conditions, { image: false });
+                    break;
+                case 'updated':
+                    /*queryItemFunction = () => this.MemberCollection.find({
+                        updated: {
+                            $gt: text['from'],
+                            $lt: text['to']
+                        }
+                    }, { image: false })*/
+                    queryItemFunction = () => this.MemberCollection
+                        .find({} , {image: false})
+                        .where('updated')
+                        .gt(text['from'])
+                        .lt(text['to'])
+                    break;
+                default:
+                    conditions[type] = new RegExp(text, 'i');
+                    queryItemFunction = () => this.MemberCollection.find(conditions, { image: false });
+                    break;
+            }
+
+
+        }
 
         //ค้นหาและแบ่งหน้า page
-        const items = await this.MemberCollection
-            .find({}, { image: false })
+        const items = await queryItemFunction()
             .sort({ updated: -1 })
             .skip((searchOption.startPage - 1) * searchOption.limitPage)
             .limit(searchOption.limitPage);
 
-        //หาผลรวมหน้า page ทั้งหมด
-        const totalItems = await this.MemberCollection.count({});
-        return <IMember>{
-            items,
-            totalItems
-        };
+        //ผลรวมหน้า page ทั้งหมด
+        const totalItems = await queryItemFunction().count({});
+        return <IMember>{ items, totalItems };
     }
 }
