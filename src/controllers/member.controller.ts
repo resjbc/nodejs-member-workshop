@@ -18,7 +18,7 @@ import { ChangePasswordModel } from 'models/change-password.model';
 export class MemberController {
     constructor(private service: MemberService) { }
 
-    @Get('data') // ลงทะเบียน
+    @Get('data') // แสดงข้อมูลผู้ใช้งานที่เข้าสู่ระบบ
     getUserLogin(@Req() req: Request) {
         const userLogin: IMemberDocument = req.user as any;
         userLogin.image = userLogin.image ? 'http://localhost:3000' + userLogin.image : '';
@@ -26,14 +26,20 @@ export class MemberController {
         return userLogin;
     }
 
-    @Post('profile')
+    @Post('profile') //แก้ไขข้อมูลส่วนตัว
     updateProfile(@Req() req: Request, @Body(new ValidationPipe()) body: ProfileModel) {
         return this.service.onUpdateProfile(req.user.id,req.user.image, body);
     }
 
-    @Post('change-password')
+    @Post('change-password') //เปลี่ยนรหัสผ่าน
     changePassword(@Req() req: Request, @Body(new ValidationPipe()) body: ChangePasswordModel) {
         return this.service.onChangePassword(req.user.id, body);
     }
+
+    @Get() //แสดงข้อมูลสมาชิก
+    showMember() {
+        return this.service.getMemberItems();
+    }
+
 
 }

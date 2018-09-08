@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
-import { IProfile, IAccount, IChangePassword } from "interfaces/app.interface";
+import { IProfile, IAccount, IChangePassword, IMember, RoleAccount } from "interfaces/app.interface";
 import { IMemberDocument } from "interfaces/member.interface";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -9,7 +9,22 @@ import { verify, generate } from "password-hash";
 
 @Injectable()
 export class MemberService {
-    constructor(@InjectModel('Member') private MemberCollection: Model<IMemberDocument>) { }
+    constructor(@InjectModel('Member') private MemberCollection: Model<IMemberDocument>) {
+        /*const members: IAccount[] = [];
+            for (let i = 0; i <= 100; i++){
+                members.push({
+                    firstname: `firstname ${i}`,
+                    lastname: `lastname ${i}`,
+                    email: `email${i}@mail.com`,
+                    password: generate(`password-${i}`),
+                    image: '',
+                    position: '',
+                    role: RoleAccount.Member
+                });
+            }*/
+
+           //this.MemberCollection.create(members, ( err => console.log(err)))
+     }
 
     // แก้ไขข้อมูลโปรไฟล์
     async onUpdateProfile(memberID: any, memberImage: string, body: IProfile) {
@@ -29,6 +44,7 @@ export class MemberService {
         });
         if (!updated.ok) throw new BadRequestException('ข้อมูลไม่มีการเปลี่ยนแปลง');
         const memberItem = await this.MemberCollection.findById(memberID);
+        //const memberItem = await this.MemberCollection.findById(memberID, { password: false});
         memberItem.image = memberItem.image ? 'http://localhost:3000' + memberItem.image + '?ver=' + Math.random() : '';
         memberItem.password = '';
         return memberItem;
@@ -73,5 +89,16 @@ export class MemberService {
             });
 
         return updated;
+    }
+
+    //แสดงข้อมูลสมาชิก
+    async getMemberItems() {
+        
+        const items =  await this.MemberCollection.find({}, { image: false});
+        const totalItems = await this.MemberCollection.count({});
+        return <IMember>{
+            items,
+            totalItems
+        };
     }
 }
