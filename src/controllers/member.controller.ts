@@ -12,6 +12,8 @@ import { MemberService } from 'services/member.service';
 import { ChangePasswordModel } from 'models/change-password.model';
 import { SearchModel } from 'models/search.model';
 import { ParamMemberModel, UpdateMemberModel, CreateMemberModel } from 'models/member.model';
+import { RoleGuard } from 'guards/role.gurad';
+import { RoleAccount } from 'interfaces/app.interface';
 
 
 @Controller('api/member')
@@ -21,6 +23,7 @@ export class MemberController {
     constructor(private service: MemberService) { }
 
     @Get('data') // แสดงข้อมูลผู้ใช้งานที่เข้าสู่ระบบ
+    @UseGuards(new RoleGuard(RoleAccount.Admin,RoleAccount.Employee,RoleAccount.Member))
     getUserLogin(@Req() req: Request) {
         const userLogin: IMemberDocument = req.user as any;
         userLogin.image = userLogin.image ? 'http://localhost:3000' + userLogin.image : '';
@@ -29,16 +32,19 @@ export class MemberController {
     }
 
     @Post('profile') //แก้ไขข้อมูลส่วนตัว
+    @UseGuards(new RoleGuard(RoleAccount.Admin,RoleAccount.Employee,RoleAccount.Member))
     updateProfile(@Req() req: Request, @Body(new ValidationPipe()) body: ProfileModel) {
         return this.service.onUpdateProfile(req.user.id,req.user.image, body);
     }
 
     @Post('change-password') //เปลี่ยนรหัสผ่าน
+    @UseGuards(new RoleGuard(RoleAccount.Admin,RoleAccount.Employee,RoleAccount.Member))
     changePassword(@Req() req: Request, @Body(new ValidationPipe()) body: ChangePasswordModel) {
         return this.service.onChangePassword(req.user.id, body);
     }
 
     @Get() //แสดงข้อมูลสมาชิก
+    @UseGuards(new RoleGuard(RoleAccount.Admin,RoleAccount.Employee))
     showMember(@Query(new ValidationPipe()) query:SearchModel) {
         query.startPage = parseInt(query.startPage as any);
         query.limitPage = parseInt(query.limitPage as any);
@@ -46,21 +52,25 @@ export class MemberController {
     }
 
     @Post() //เพิ่มข้อมูลสมาชิก
-    createMember(@Req() req: Request, @Body(new ValidationPipe()) body: CreateMemberModel) {
+    @UseGuards(new RoleGuard(RoleAccount.Admin))
+    createMember(@Body(new ValidationPipe()) body: CreateMemberModel) {
       return this.service.createMemberItem(body);
     }
 
     @Get(':id') //แสดงข้อมูลสมาชิกคนเดียว
+    @UseGuards(new RoleGuard(RoleAccount.Admin))
     showMemberById(@Param(new ValidationPipe()) param : ParamMemberModel){
         return this.service.getMemberItem(param.id);
     }
 
     @Put(':id') //แก้ไขข้อมูลสมาชิก
+    @UseGuards(new RoleGuard(RoleAccount.Admin))
     updateMember(@Param(new ValidationPipe()) param : ParamMemberModel , @Body(new ValidationPipe()) body: UpdateMemberModel) {
         return this.service.updateMemberItem(param.id, body);
     }
 
-    @Delete(':id')
+    @Delete(':id') //ลบข้อมูลสมาชิก
+    @UseGuards(new RoleGuard(RoleAccount.Admin,RoleAccount.Employee))
     deleteMember(@Param(new ValidationPipe()) param : ParamMemberModel) {
         return this.service.deleteMemberItem(param.id);
     }
