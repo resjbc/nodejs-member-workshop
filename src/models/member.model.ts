@@ -1,5 +1,6 @@
 import { IAccount, RoleAccount } from "interfaces/app.interface";
 import { IsNotEmpty, IsEmail, Matches, IsMongoId, ValidateIf } from "class-validator";
+import { IsRoleAccount } from "pipes/validation.pipe";
 
 export class CreateMemberModel implements IAccount {
 
@@ -23,7 +24,8 @@ export class CreateMemberModel implements IAccount {
     image?: string;
 
     @IsNotEmpty()
-   // @Matches(new RegExp(`(${RoleAccount.Admin}|${RoleAccount.Employee}|${RoleAccount.Member}){1}`))
+    // @Matches(new RegExp(`(${RoleAccount.Admin}|${RoleAccount.Employee}|${RoleAccount.Member}){1}`))
+    @IsRoleAccount()
     role?: RoleAccount;
 
     id?: any;
@@ -55,6 +57,7 @@ export class UpdateMemberModel implements IAccount {
     image?: string;
 
     @IsNotEmpty()
+    @IsRoleAccount()
     role?: RoleAccount;
 
     id?: any;

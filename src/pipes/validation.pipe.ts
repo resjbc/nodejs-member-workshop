@@ -1,6 +1,7 @@
 import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import { validate, ValidationOptions, registerDecorator, ValidationArguments } from 'class-validator';
 import { plainToClass } from 'class-transformer';
+import { RoleAccount } from 'interfaces/app.interface';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
@@ -33,6 +34,7 @@ export class ValidationPipe implements PipeTransform<any> {
     }
 }
 
+// Custom validation  ตรวจสอบ Password และ CustomPassword
 export function IsComparePassword(property: string, validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
         if (validationOptions == undefined) {
@@ -48,6 +50,28 @@ export function IsComparePassword(property: string, validationOptions?: Validati
             validator: {
                 validate(value: any, args: ValidationArguments) {
                     return args.object[property] === value;
+                }
+            }
+        });
+    };
+}
+
+// Custom validation ตรวจสอบ Role Account ว่ามีในระบบหรือไม่
+export function IsRoleAccount(validationOptions?: ValidationOptions) {
+    return function (object: Object, propertyName: string) {
+        if (validationOptions == undefined) {
+            validationOptions = {};
+            validationOptions.message = 'role account do not match.'
+        }
+        registerDecorator({
+            name: "IsRoleAccount",
+            target: object.constructor,
+            propertyName: propertyName,
+            constraints: [],
+            options: validationOptions,
+            validator: {
+                validate(value: any, args: ValidationArguments) {
+                    return RoleAccount[value] != undefined;
                 }
             }
         });
