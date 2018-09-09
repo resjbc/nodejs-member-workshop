@@ -1,4 +1,4 @@
-import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req, Query } from '@nestjs/common';
+import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req, Query, Param } from '@nestjs/common';
 import { AppService } from 'services/app.service';
 import { RegisterModel } from 'models/register.model';
 import { ValidationPipe } from 'pipes/validation.pipe';
@@ -11,7 +11,7 @@ import { ProfileModel } from 'models/profile.model';
 import { MemberService } from 'services/member.service';
 import { ChangePasswordModel } from 'models/change-password.model';
 import { SearchModel } from 'models/search.model';
-import { MemberModel } from 'models/member.model';
+import { MemberModel, ParamMemberModel } from 'models/member.model';
 
 
 @Controller('api/member')
@@ -49,6 +49,13 @@ export class MemberController {
     createMember(@Req() req: Request, @Body(new ValidationPipe()) body: MemberModel) {
       return this.service.createMemberItem(body);
     }
+
+    @Get(':id') //แสดงข้อมูลสมาชิกคนเดียว
+    showMemberById(@Param(new ValidationPipe()) param : ParamMemberModel){
+        return this.service.getMemberItem(param.id);
+    }
+
+
 
 
 }

@@ -1,10 +1,10 @@
 import { IAccount, RoleAccount } from "interfaces/app.interface";
-import { IsNotEmpty, IsEmail, Matches } from "class-validator";
+import { IsNotEmpty, IsEmail, Matches, IsMongoId } from "class-validator";
 
 export class MemberModel implements IAccount {
-    
+
     @IsNotEmpty()
-    firstname: string;   
+    firstname: string;
 
     @IsNotEmpty()
     lastname: string;
@@ -31,4 +31,10 @@ export class MemberModel implements IAccount {
     updated?: Date;
 
 
+}
+
+export class ParamMemberModel {
+    @IsMongoId()
+    @IsNotEmpty()
+    id: number
 }

@@ -26,6 +26,13 @@ export class MemberService {
         //this.MemberCollection.create(members, ( err => console.log(err)))
     }
 
+    //แสดงข้อมูงสมาชิกคนเดียว
+    async getMemberItem(memberId: any) {
+        const memberItem = await this.MemberCollection.findById(memberId, { password: false });
+        memberItem.image = memberItem.image ? 'http://localhost:3000' + memberItem.image + '?ver=' + Math.random() : '';
+        return memberItem;
+    }
+
     //สร้างข้อมูลสมาชิก
     async createMemberItem(body: IAccount) {
         const count = await this.MemberCollection.count({ email: body.email });
