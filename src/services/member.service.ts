@@ -1,11 +1,11 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import { IProfile, IAccount, IChangePassword, IMember, RoleAccount, ISearch } from "interfaces/app.interface";
-import { IMemberDocument } from "interfaces/member.interface";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { BASE_DIR } from "main";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { verify, generate } from "password-hash";
+import { IMemberDocument } from "../interfaces/member.interface";
+import { BASE_DIR } from "../main";
 
 @Injectable()
 export class MemberService {

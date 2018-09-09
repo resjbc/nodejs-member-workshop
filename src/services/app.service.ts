@@ -1,8 +1,8 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IMemberDocument } from 'interfaces/member.interface';
-import { IRegister, IAccount, RoleAccount, ILogin } from 'interfaces/app.interface';
+import { IMemberDocument } from '../interfaces/member.interface';
+import { IRegister, IAccount, RoleAccount, ILogin } from '../interfaces/app.interface';
 import { generate, verify } from 'password-hash';
 import { DBAuthenService } from './db_authen.service';
 import { JwtAuthenService } from './jwt-authen.service';

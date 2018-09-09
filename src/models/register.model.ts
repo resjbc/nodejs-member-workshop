@@ -1,6 +1,6 @@
 import { IRegister } from "interfaces/app.interface";
 import { IsNotEmpty, IsEmail, Matches } from "class-validator";
-import { IsComparePassword } from "pipes/validation.pipe";
+import { IsComparePassword } from "../pipes/validation.pipe";
 
 export class RegisterModel implements IRegister {
 

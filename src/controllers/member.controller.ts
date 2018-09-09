@@ -1,19 +1,17 @@
 import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req, Query, Param, Put, Delete } from '@nestjs/common';
-import { AppService } from 'services/app.service';
-import { RegisterModel } from 'models/register.model';
-import { ValidationPipe } from 'pipes/validation.pipe';
-import { LoginModel } from 'models/login.model';
-import { DBAuthenService } from 'services/db_authen.service';
+
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { IMemberDocument } from 'interfaces/member.interface';
-import { ProfileModel } from 'models/profile.model';
-import { MemberService } from 'services/member.service';
-import { ChangePasswordModel } from 'models/change-password.model';
-import { SearchModel } from 'models/search.model';
-import { ParamMemberModel, UpdateMemberModel, CreateMemberModel } from 'models/member.model';
-import { RoleGuard } from 'guards/role.gurad';
-import { RoleAccount } from 'interfaces/app.interface';
+import { IMemberDocument } from '../interfaces/member.interface';
+import { ChangePasswordModel } from '../models/change-password.model';
+import { ParamMemberModel, UpdateMemberModel, CreateMemberModel } from '../models/member.model';
+
+import { RoleGuard } from '../guards/role.gurad';
+import { RoleAccount } from '../interfaces/app.interface';
+import { ProfileModel } from '../models/profile.model';
+import { ValidationPipe } from '../pipes/validation.pipe';
+import { MemberService } from '../services/member.service';
+import { SearchModel } from '../models/search.model';
 
 
 @Controller('api/member')

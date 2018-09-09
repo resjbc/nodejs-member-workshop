@@ -1,6 +1,6 @@
-import { IAccount, RoleAccount } from "interfaces/app.interface";
+import { IAccount, RoleAccount } from "../interfaces/app.interface";
 import { IsNotEmpty, IsEmail, Matches, IsMongoId, ValidateIf } from "class-validator";
-import { IsRoleAccount } from "pipes/validation.pipe";
+import { IsRoleAccount } from "../pipes/validation.pipe";
 
 export class CreateMemberModel implements IAccount {
 
