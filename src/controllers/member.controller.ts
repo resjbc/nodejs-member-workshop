@@ -1,4 +1,4 @@
-import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req, Query, Param, Put } from '@nestjs/common';
+import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req, Query, Param, Put, Delete } from '@nestjs/common';
 import { AppService } from 'services/app.service';
 import { RegisterModel } from 'models/register.model';
 import { ValidationPipe } from 'pipes/validation.pipe';
@@ -55,9 +55,14 @@ export class MemberController {
         return this.service.getMemberItem(param.id);
     }
 
-    @Put(':id')
+    @Put(':id') //แก้ไขข้อมูลสมาชิก
     updateMember(@Param(new ValidationPipe()) param : ParamMemberModel , @Body(new ValidationPipe()) body: UpdateMemberModel) {
         return this.service.updateMemberItem(param.id, body);
+    }
+
+    @Delete(':id')
+    deleteMember(@Param(new ValidationPipe()) param : ParamMemberModel) {
+        return this.service.deleteMemberItem(param.id);
     }
 
 

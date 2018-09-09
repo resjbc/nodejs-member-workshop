@@ -205,5 +205,10 @@ export class MemberService {
         return <IMember>{ items, totalItems };
     }
 
+    //ลบข้อมูลสมาชิก
+    async deleteMemberItem(memberID: any) {
+        return await this.MemberCollection.remove({_id: memberID});
+    }
+
 
 }
