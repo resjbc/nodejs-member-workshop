@@ -26,6 +26,47 @@ export class MemberService {
         //this.MemberCollection.create(members, ( err => console.log(err)))
     }
 
+    //แก้ไขข้อมูลสมาชิก
+    async updateMemberItem(memberID: any, body: IAccount) {
+        const memberUpdate = await this.MemberCollection.findById(memberID);
+        if (!memberUpdate) throw new BadRequestException('ไม่มีข้อมูลนี้ในระบบ');
+
+        /*const memberItemCount = await this.MemberCollection.count({email:body.email});
+        if(memberItem.email != body.email && memberItemCount > 0)
+        throw new BadRequestException('มีอีมล์นี้ในระบบแล้ว');*/
+
+        try {
+            memberUpdate.email = body.email;
+            memberUpdate.firstname = body.firstname;
+            memberUpdate.lastname = body.lastname;
+
+            if (body.image && body.image.trim() != '')
+                if (body.image.replace('http://localhost:3000', '').split('?')[0] != memberUpdate.image) {
+                    this.convertUploadImage(memberID, body.image)
+                }
+
+
+            memberUpdate.position = body.position;
+            memberUpdate.role = body.role;
+            memberUpdate.updated = new Date();
+            //ตรวจสอบการเปลี่ยนรหัสผ่าน
+            if (body.password && body.password.trim() != '')
+                memberUpdate.password = generate(body.password);
+
+            const updated = await this.MemberCollection.update({ _id: memberID }, memberUpdate);
+            if (!updated.ok) throw new BadRequestException('ไม่สามารแก้ไขข้อมูลได้');
+
+            const memberUpdated = await this.MemberCollection.findById(memberID, { password: false });
+            memberUpdated.image = memberUpdated.image ? 'http://localhost:3000' + memberUpdated.image + '?ver=' + Math.random() : '';
+            return memberUpdated;
+
+        } catch (ex) {
+            throw new BadRequestException(ex.message);
+        }
+
+
+    }
+
     //แสดงข้อมูงสมาชิกคนเดียว
     async getMemberItem(memberId: any) {
         const memberItem = await this.MemberCollection.findById(memberId, { password: false });

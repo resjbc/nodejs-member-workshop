@@ -1,4 +1,4 @@
-import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req, Query, Param } from '@nestjs/common';
+import { Get, Controller, Post, Body, BadRequestException, UseGuards, Req, Query, Param, Put } from '@nestjs/common';
 import { AppService } from 'services/app.service';
 import { RegisterModel } from 'models/register.model';
 import { ValidationPipe } from 'pipes/validation.pipe';
@@ -11,7 +11,7 @@ import { ProfileModel } from 'models/profile.model';
 import { MemberService } from 'services/member.service';
 import { ChangePasswordModel } from 'models/change-password.model';
 import { SearchModel } from 'models/search.model';
-import { MemberModel, ParamMemberModel } from 'models/member.model';
+import { ParamMemberModel, UpdateMemberModel, CreateMemberModel } from 'models/member.model';
 
 
 @Controller('api/member')
@@ -46,13 +46,18 @@ export class MemberController {
     }
 
     @Post() //เพิ่มข้อมูลสมาชิก
-    createMember(@Req() req: Request, @Body(new ValidationPipe()) body: MemberModel) {
+    createMember(@Req() req: Request, @Body(new ValidationPipe()) body: CreateMemberModel) {
       return this.service.createMemberItem(body);
     }
 
     @Get(':id') //แสดงข้อมูลสมาชิกคนเดียว
     showMemberById(@Param(new ValidationPipe()) param : ParamMemberModel){
         return this.service.getMemberItem(param.id);
+    }
+
+    @Put(':id')
+    updateMember(@Param(new ValidationPipe()) param : ParamMemberModel , @Body(new ValidationPipe()) body: UpdateMemberModel) {
+        return this.service.updateMemberItem(param.id, body);
     }
 
 
